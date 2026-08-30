@@ -1,6 +1,6 @@
-package com.neoloxal.paint_pallet_lib.datagen;
+package com.neoloxal.paint_palette_lib.datagen;
 
-import com.neoloxal.paint_pallet_lib.PaintPallet;
+import com.neoloxal.paint_palette_lib.PaintPalette;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.PackOutput;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -19,7 +19,7 @@ public class LibDataGenerators {
         PackOutput packOutput = generator.getPackOutput();
         ExistingFileHelper existingFileHelper = event.getExistingFileHelper();
 
-        for (String modid : PaintPallet.modIds) {
+        for (String modid : PaintPalette.modIds) {
             generator.addProvider(event.includeClient(), new LibItemModelProvider(packOutput, modid, existingFileHelper));
             generator.addProvider(event.includeClient(), new LibLangProvider(packOutput, modid));
         }
@@ -35,7 +35,7 @@ public class LibDataGenerators {
 
         @Override
         protected void registerModels() {
-            PaintPallet.itemRegisters.forEach(itemRegistrar -> {
+            PaintPalette.itemRegisters.forEach(itemRegistrar -> {
                 if (itemRegistrar.getModId().equals(this.modId)) {
                     itemRegistrar.getFunnySticks().forEach(item ->
                             withExistingParent(item.getId().toString(), mcLoc("item/stick"))
@@ -55,7 +55,7 @@ public class LibDataGenerators {
 
         @Override
         protected void addTranslations() {
-            PaintPallet.itemRegisters.forEach(itemRegistrar -> {
+            PaintPalette.itemRegisters.forEach(itemRegistrar -> {
                 if (itemRegistrar.getModId().equals(this.modId)) {
                     itemRegistrar.getFunnySticks().forEach(item ->
                             add(item.get(), WordUtils.capitalizeFully(item.getKey().location().getPath().replace('_', ' ')))

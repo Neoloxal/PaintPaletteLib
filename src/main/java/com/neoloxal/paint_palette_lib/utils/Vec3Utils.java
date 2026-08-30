@@ -1,4 +1,4 @@
-package com.neoloxal.paint_pallet_lib.utils;
+package com.neoloxal.paint_palette_lib.utils;
 
 import net.minecraft.world.phys.Vec3;
 

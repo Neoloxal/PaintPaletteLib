@@ -1,6 +1,6 @@
-package com.neoloxal.paint_pallet_lib.registrar;
+package com.neoloxal.paint_palette_lib.registrar;
 
-import com.neoloxal.paint_pallet_lib.PaintPallet;
+import com.neoloxal.paint_palette_lib.PaintPalette;
 import net.minecraft.world.level.block.Block;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredBlock;
@@ -14,7 +14,7 @@ public abstract class BlockRegistrar {
     protected final ItemRegistrar itemRegistrar;
     protected final String modId;
 
-    protected BlockRegistrar(String modid, ItemRegistrar itemRegistrar) {
+    public BlockRegistrar(String modid, ItemRegistrar itemRegistrar) {
         modId = modid;
         blocks = DeferredRegister.createBlocks(modid);
         this.itemRegistrar = itemRegistrar;
@@ -23,7 +23,7 @@ public abstract class BlockRegistrar {
     public void register(IEventBus eventBus) {
         registerBlocks();
         blocks.register(eventBus);
-        PaintPallet.blockRegistrars.add(this);
+        PaintPalette.blockRegistrars.add(this);
     }
 
     protected abstract void registerBlocks();
