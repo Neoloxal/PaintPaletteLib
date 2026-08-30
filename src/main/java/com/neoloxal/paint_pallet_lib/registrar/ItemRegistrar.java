@@ -2,42 +2,59 @@ package com.neoloxal.paint_pallet_lib.registrar;
 
 import com.neoloxal.paint_pallet_lib.PaintPallet;
 import com.neoloxal.paint_pallet_lib.item.FunnyStick;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.level.block.Block;
 import net.neoforged.bus.api.IEventBus;
+import net.neoforged.neoforge.registries.DeferredBlock;
 import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
+import java.util.Optional;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 public abstract class ItemRegistrar {
-    protected DeferredRegister.Items ITEMS;
+    protected final DeferredRegister.Items items;
     protected final String modId;
 
     protected ItemRegistrar(String modid) {
         modId = modid;
+        items = DeferredRegister.createItems(modId);
     }
 
     public void register(IEventBus eventBus) {
-        ITEMS = DeferredRegister.createItems(modId);
         registerItems();
-        ITEMS.register(eventBus);
+        items.register(eventBus);
         PaintPallet.itemRegisters.add(this);
     }
 
     protected abstract void registerItems();
 
+
     protected <I extends Item> DeferredItem<I> basicItem(String name, Supplier<? extends I> supplier) {
-        return ITEMS.register(name, supplier);
+        return items.register(name, supplier);
     }
 
     protected <I extends FunnyStick> DeferredItem<I> funnyStick(String name, Supplier<? extends I> supplier) {
         return basicItem(name, supplier);
     }
 
+    protected <I extends Item> Optional<DeferredItem<I>> conditionalItem(String name, Supplier<? extends I> supplier, boolean run) {
+        if (run) {
+            return Optional.of(basicItem(name, supplier));
+        }
+        return Optional.empty();
+    }
+
+    public <I extends Block> void blockItem(String name, DeferredBlock<I> block) {
+        basicItem(name, () -> new BlockItem(block.get(), new Item.Properties()));
+    }
+
+
     @SuppressWarnings("unchecked")
     public Stream<DeferredItem<? extends FunnyStick>> getFunnySticks() {
-        return ITEMS.getEntries().stream()
+        return items.getEntries().stream()
                 .filter(entry -> entry.get() instanceof FunnyStick)
                 .map(entry -> (DeferredItem<? extends FunnyStick>) entry);
     }
