@@ -99,16 +99,6 @@ publishing {
             from components.java
         }
     }
-    repositories {
-        maven {
-            name = "PaintPalletLib"
-            url = "https://maven.pkg.github.com/neoloxal/paintpalletlib"
-            credentials {
-                username = System.getenv("GITHUB_ACTOR") ?: "neoloxal"
-                password = System.getenv("GITHUB_TOKEN")
-            }
-        }
-    }
 }
 
 idea {
