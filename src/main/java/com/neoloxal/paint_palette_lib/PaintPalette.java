@@ -1,6 +1,7 @@
 package com.neoloxal.paint_palette_lib;
 
 import com.mojang.logging.LogUtils;
+import com.neoloxal.paint_palette_lib.datagen.LibDataGenerators;
 import com.neoloxal.paint_palette_lib.registrar.BlockRegistrar;
 import com.neoloxal.paint_palette_lib.registrar.ItemRegistrar;
 import net.neoforged.bus.api.IEventBus;
@@ -23,9 +24,10 @@ public class PaintPalette {
     public PaintPalette(IEventBus modEventBus, ModContainer modContainer) {
     }
 
-    public static void registerModID(String modid) {
+    public static void registerMod(String modid, IEventBus modEventBus) {
         if (!modIds.contains(modid)) {
             modIds.add(modid);
+            modEventBus.addListener(LibDataGenerators::gatherData);
         }
     }
 }
