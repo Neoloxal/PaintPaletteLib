@@ -4,6 +4,7 @@ import com.mojang.logging.LogUtils;
 import com.neoloxal.paint_palette_lib.datagen.LibDataGenerators;
 import com.neoloxal.paint_palette_lib.registrar.BlockRegistrar;
 import com.neoloxal.paint_palette_lib.registrar.ItemRegistrar;
+import com.neoloxal.paint_palette_lib.test.LibItems;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
@@ -21,8 +22,12 @@ public class PaintPalette {
     public static List<ItemRegistrar> itemRegisters = new ArrayList<>();
     public static List<BlockRegistrar> blockRegistrars = new ArrayList<>();
 
+    public static boolean enableTestItems = true;
+    private static final ItemRegistrar LIB_ITEMS = new LibItems();
+
     public PaintPalette(IEventBus modEventBus, ModContainer modContainer) {
         registerMod(MODID, modEventBus);
+        LIB_ITEMS.register(modEventBus);
     }
 
     public static void registerMod(String modid, IEventBus modEventBus) {
