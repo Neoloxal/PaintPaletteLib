@@ -12,13 +12,15 @@ import org.slf4j.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Mod(PaintPalette.MODID)
 public class PaintPalette {
     public static final String MODID = "paint_palette";
     private static final Logger LOGGER = LogUtils.getLogger();
 
-    public static List<String> modIds = new ArrayList<>();
+    public static Set<String> modIds = ConcurrentHashMap.newKeySet();
     public static List<ItemRegistrar> itemRegisters = new ArrayList<>();
     public static List<BlockRegistrar> blockRegistrars = new ArrayList<>();
 
@@ -31,8 +33,7 @@ public class PaintPalette {
     }
 
     public static void registerMod(String modid, IEventBus modEventBus) {
-        if (!modIds.contains(modid)) {
-            modIds.add(modid);
+        if (modIds.add(modid)) {
             modEventBus.addListener(LibDataGenerators::gatherData);
         }
     }
