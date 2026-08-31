@@ -16,11 +16,10 @@ public class LibDataGenerators {
         DataGenerator generator = event.getGenerator();
         PackOutput packOutput = generator.getPackOutput();
         ExistingFileHelper existingFileHelper = event.getExistingFileHelper();
+        String modid = event.getModContainer().getModId();
 
-        for (String modid : PaintPalette.modIds) {
-            generator.addProvider(event.includeClient(), new LibItemModelProvider(packOutput, modid, existingFileHelper));
-            generator.addProvider(event.includeClient(), new LibLangProvider(packOutput, modid));
-        }
+        generator.addProvider(event.includeClient(), new LibItemModelProvider(packOutput, modid, existingFileHelper));
+        generator.addProvider(event.includeClient(), new LibLangProvider(packOutput, modid));
     }
 
     private static class LibItemModelProvider extends ItemModelProvider {

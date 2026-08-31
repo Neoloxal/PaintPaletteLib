@@ -22,6 +22,7 @@ public class PaintPalette {
     public static List<BlockRegistrar> blockRegistrars = new ArrayList<>();
 
     public PaintPalette(IEventBus modEventBus, ModContainer modContainer) {
+        registerMod(MODID, modEventBus);
     }
 
     public static void registerMod(String modid, IEventBus modEventBus) {
