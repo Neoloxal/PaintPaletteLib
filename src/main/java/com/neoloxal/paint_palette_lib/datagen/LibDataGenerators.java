@@ -1,10 +1,8 @@
 package com.neoloxal.paint_palette_lib.datagen;
 
-import com.neoloxal.paint_palette_lib.PaintPalette;
+import com.neoloxal.paint_palette_lib.Palette;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.PackOutput;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.model.generators.ItemModelProvider;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import net.neoforged.neoforge.common.data.LanguageProvider;
@@ -32,7 +30,7 @@ public class LibDataGenerators {
 
         @Override
         protected void registerModels() {
-            PaintPalette.itemRegisters.forEach(itemRegistrar -> {
+            Palette.itemRegisters.forEach(itemRegistrar -> {
                 if (itemRegistrar.getModId().equals(this.modId)) {
                     itemRegistrar.getFunnySticks().forEach(item ->
                             withExistingParent(item.getId().toString(), mcLoc("item/stick"))
@@ -52,7 +50,7 @@ public class LibDataGenerators {
 
         @Override
         protected void addTranslations() {
-            PaintPalette.itemRegisters.forEach(itemRegistrar -> {
+            Palette.itemRegisters.forEach(itemRegistrar -> {
                 if (itemRegistrar.getModId().equals(this.modId)) {
                     itemRegistrar.getFunnySticks().forEach(item ->
                             add(item.get(), WordUtils.capitalizeFully(item.getKey().location().getPath().replace('_', ' ')))

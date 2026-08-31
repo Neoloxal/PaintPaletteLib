@@ -1,6 +1,7 @@
 package com.neoloxal.paint_palette_lib;
 
 import com.mojang.logging.LogUtils;
+import com.neoloxal.paint_palette_lib.builtin.registrar.LibDataComponents;
 import com.neoloxal.paint_palette_lib.datagen.LibDataGenerators;
 import com.neoloxal.paint_palette_lib.registrar.BlockRegistrar;
 import com.neoloxal.paint_palette_lib.registrar.ItemRegistrar;
@@ -15,8 +16,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-@Mod(PaintPalette.MODID)
-public class PaintPalette {
+@Mod(Palette.MODID)
+public class Palette {
     public static final String MODID = "paint_palette";
     private static final Logger LOGGER = LogUtils.getLogger();
 
@@ -27,9 +28,10 @@ public class PaintPalette {
     public static boolean enableTestItems = true;
     private static final ItemRegistrar LIB_ITEMS = new LibItems();
 
-    public PaintPalette(IEventBus modEventBus, ModContainer modContainer) {
+    public Palette(IEventBus modEventBus, ModContainer modContainer) {
         registerMod(MODID, modEventBus);
         LIB_ITEMS.register(modEventBus);
+        LibDataComponents.register(modEventBus);
     }
 
     public static void registerMod(String modid, IEventBus modEventBus) {

@@ -1,4 +1,4 @@
-package com.neoloxal.paint_palette_lib.item;
+package com.neoloxal.paint_palette_lib.builtin.item;
 
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.InteractionHand;

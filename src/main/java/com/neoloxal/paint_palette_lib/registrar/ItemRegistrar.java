@@ -1,7 +1,7 @@
 package com.neoloxal.paint_palette_lib.registrar;
 
-import com.neoloxal.paint_palette_lib.PaintPalette;
-import com.neoloxal.paint_palette_lib.item.FunnyStick;
+import com.neoloxal.paint_palette_lib.Palette;
+import com.neoloxal.paint_palette_lib.builtin.item.FunnyStick;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
@@ -26,7 +26,7 @@ public abstract class ItemRegistrar {
     public void register(IEventBus eventBus) {
         registerItems();
         items.register(eventBus);
-        PaintPalette.itemRegisters.add(this);
+        Palette.itemRegisters.add(this);
     }
 
     protected abstract void registerItems();
