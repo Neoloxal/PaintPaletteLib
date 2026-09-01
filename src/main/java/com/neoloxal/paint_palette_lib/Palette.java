@@ -21,7 +21,7 @@ public class Palette {
     public static final String MODID = "paint_palette";
     private static final Logger LOGGER = LogUtils.getLogger();
 
-    public static Set<String> modIds = ConcurrentHashMap.newKeySet();
+    public static Set<String> modPalette = ConcurrentHashMap.newKeySet();
     public static List<ItemRegistrar> itemRegisters = new ArrayList<>();
     public static List<BlockRegistrar> blockRegistrars = new ArrayList<>();
 
@@ -36,8 +36,11 @@ public class Palette {
     }
 
     public static void registerMod(String modid, IEventBus modEventBus) {
-        if (modIds.add(modid)) {
+        if (modPalette.add(modid)) {
+            LOGGER.info("Adding {} to mod palette.", modid);
             modEventBus.addListener(LibDataGenerators::gatherData);
+            return;
         }
+        LOGGER.warn("Mod {} already exists in mod palette!", modid);
     }
 }

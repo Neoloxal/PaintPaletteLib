@@ -16,7 +16,7 @@ public abstract class BlockRegistrar {
     protected final ItemRegistrar itemRegistrar;
     protected final String modId;
 
-    public Map<String, DeferredBlock<? extends Block>> registeredBlocks = new HashMap<>();
+    protected Map<String, DeferredBlock<? extends Block>> registeredBlocks = new HashMap<>();
 
     public BlockRegistrar(String modid, ItemRegistrar itemRegistrar) {
         modId = modid;
@@ -33,6 +33,9 @@ public abstract class BlockRegistrar {
     protected abstract void registerBlocks();
 
     protected <B extends Block> DeferredBlock<B> basicBlock(String name, Supplier<? extends B> supplier, boolean registerItem) {
+        if (registeredBlocks.containsKey(name)) {
+            throw new IllegalStateException("Duplicate block name: " + name);
+        }
         DeferredBlock<B> block = blocks.register(name, supplier);
         registeredBlocks.put(name, block);
         if (registerItem) {
@@ -54,5 +57,9 @@ public abstract class BlockRegistrar {
 
     protected <B extends Block> Optional<DeferredBlock<B>> conditionalBlock(boolean run, String name, Supplier<? extends  B> supplier) {
         return conditionalBlock(run, name, supplier, true);
+    }
+
+    public Map<String, DeferredBlock<? extends Block>> getRegisteredBlocks() {
+        return registeredBlocks;
     }
 }

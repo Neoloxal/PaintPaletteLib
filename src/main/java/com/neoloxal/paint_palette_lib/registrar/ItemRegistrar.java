@@ -20,7 +20,7 @@ public abstract class ItemRegistrar {
     protected final DeferredRegister.Items items;
     protected final String modId;
 
-    public Map<String, DeferredItem<? extends Item>> registeredItems = new HashMap<>();
+    protected Map<String, DeferredItem<? extends Item>> registeredItems = new HashMap<>();
 
     public ItemRegistrar(String modid) {
         modId = modid;
@@ -37,6 +37,9 @@ public abstract class ItemRegistrar {
 
 
     protected <I extends Item> DeferredItem<I> basicItem(String name, Supplier<? extends I> supplier) {
+        if (registeredItems.containsKey(name)) {
+            throw new IllegalStateException("Duplicate item name: " + name);
+        }
         DeferredItem<I> item = items.register(name, supplier);
         registeredItems.put(name, item);
         return item;
@@ -53,8 +56,12 @@ public abstract class ItemRegistrar {
         return Optional.empty();
     }
 
-    public <I extends Block> void blockItem(String name, DeferredBlock<I> block) {
+    protected  <I extends Block> void blockItem(String name, DeferredBlock<I> block) {
         basicItem(name, () -> new BlockItem(block.get(), new Item.Properties()));
+    }
+
+    public Map<String, DeferredItem<? extends Item>> getRegisteredItems() {
+        return registeredItems;
     }
 
 
