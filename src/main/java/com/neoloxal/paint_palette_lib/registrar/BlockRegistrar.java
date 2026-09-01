@@ -6,6 +6,8 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredBlock;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 import java.util.function.Supplier;
 
@@ -13,6 +15,8 @@ public abstract class BlockRegistrar {
     protected final DeferredRegister.Blocks blocks;
     protected final ItemRegistrar itemRegistrar;
     protected final String modId;
+
+    public Map<String, DeferredBlock<? extends Block>> registeredBlocks = new HashMap<>();
 
     public BlockRegistrar(String modid, ItemRegistrar itemRegistrar) {
         modId = modid;
@@ -30,6 +34,7 @@ public abstract class BlockRegistrar {
 
     protected <B extends Block> DeferredBlock<B> basicBlock(String name, Supplier<? extends B> supplier, boolean registerItem) {
         DeferredBlock<B> block = blocks.register(name, supplier);
+        registeredBlocks.put(name, block);
         if (registerItem) {
             itemRegistrar.blockItem(name, block);
         }

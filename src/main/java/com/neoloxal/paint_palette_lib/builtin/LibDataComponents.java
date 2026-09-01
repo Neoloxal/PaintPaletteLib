@@ -1,4 +1,4 @@
-package com.neoloxal.paint_palette_lib.builtin.registrar;
+package com.neoloxal.paint_palette_lib.builtin;
 
 import com.mojang.serialization.Codec;
 import com.neoloxal.paint_palette_lib.Palette;

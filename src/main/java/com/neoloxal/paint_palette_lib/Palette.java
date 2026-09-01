@@ -1,11 +1,11 @@
 package com.neoloxal.paint_palette_lib;
 
 import com.mojang.logging.LogUtils;
-import com.neoloxal.paint_palette_lib.builtin.registrar.LibDataComponents;
+import com.neoloxal.paint_palette_lib.builtin.LibDataComponents;
 import com.neoloxal.paint_palette_lib.datagen.LibDataGenerators;
 import com.neoloxal.paint_palette_lib.registrar.BlockRegistrar;
 import com.neoloxal.paint_palette_lib.registrar.ItemRegistrar;
-import com.neoloxal.paint_palette_lib.test.LibItems;
+import com.neoloxal.paint_palette_lib.builtin.demo.LibItems;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
@@ -25,13 +25,14 @@ public class Palette {
     public static List<ItemRegistrar> itemRegisters = new ArrayList<>();
     public static List<BlockRegistrar> blockRegistrars = new ArrayList<>();
 
-    public static boolean enableTestItems = true;
+    public static boolean enableDemoItems = true;
     private static final ItemRegistrar LIB_ITEMS = new LibItems();
 
     public Palette(IEventBus modEventBus, ModContainer modContainer) {
         registerMod(MODID, modEventBus);
-        LIB_ITEMS.register(modEventBus);
+
         LibDataComponents.register(modEventBus);
+        LIB_ITEMS.register(modEventBus);
     }
 
     public static void registerMod(String modid, IEventBus modEventBus) {

@@ -1,4 +1,4 @@
-package com.neoloxal.paint_palette_lib.test;
+package com.neoloxal.paint_palette_lib.builtin.demo;
 
 import com.neoloxal.paint_palette_lib.Palette;
 import com.neoloxal.paint_palette_lib.builtin.item.FunnyStick;
@@ -13,7 +13,7 @@ public class LibItems extends ItemRegistrar {
 
     @Override
     protected void registerItems() {
-        conditionalItem("funny_stick", () -> new FunnyStick(new Item.Properties()), Palette.enableTestItems);
-        conditionalItem("toggle_stick", () -> new ToggleStick(new Item.Properties()), Palette.enableTestItems);
+        conditionalItem(Palette.enableDemoItems, "funny_stick", () -> new FunnyStick(new Item.Properties()));
+        conditionalItem(Palette.enableDemoItems, "toggle_stick", () -> new ToggleStick(new Item.Properties()));
     }
 }

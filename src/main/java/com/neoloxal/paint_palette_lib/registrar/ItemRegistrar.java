@@ -10,6 +10,8 @@ import net.neoforged.neoforge.registries.DeferredBlock;
 import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
@@ -17,6 +19,8 @@ import java.util.stream.Stream;
 public abstract class ItemRegistrar {
     protected final DeferredRegister.Items items;
     protected final String modId;
+
+    public Map<String, DeferredItem<? extends Item>> registeredItems = new HashMap<>();
 
     public ItemRegistrar(String modid) {
         modId = modid;
@@ -33,14 +37,16 @@ public abstract class ItemRegistrar {
 
 
     protected <I extends Item> DeferredItem<I> basicItem(String name, Supplier<? extends I> supplier) {
-        return items.register(name, supplier);
+        DeferredItem<I> item = items.register(name, supplier);
+        registeredItems.put(name, item);
+        return item;
     }
 
     protected <I extends FunnyStick> DeferredItem<I> funnyStick(String name, Supplier<? extends I> supplier) {
         return basicItem(name, supplier);
     }
 
-    protected <I extends Item> Optional<DeferredItem<I>> conditionalItem(String name, Supplier<? extends I> supplier, boolean run) {
+    protected <I extends Item> Optional<DeferredItem<I>> conditionalItem(boolean run, String name, Supplier<? extends I> supplier) {
         if (run) {
             return Optional.of(basicItem(name, supplier));
         }
