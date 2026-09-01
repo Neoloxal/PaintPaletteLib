@@ -60,8 +60,8 @@ public abstract class ItemRegistrar {
         basicItem(name, () -> new BlockItem(block.get(), new Item.Properties()));
     }
 
-    public Map<String, DeferredItem<? extends Item>> getRegisteredItems() {
-        return registeredItems;
+    public DeferredItem<? extends Item> getItem(String name) {
+        return registeredItems.get(name);
     }
 
 

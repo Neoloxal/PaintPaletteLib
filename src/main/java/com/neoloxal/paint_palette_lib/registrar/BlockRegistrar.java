@@ -59,7 +59,7 @@ public abstract class BlockRegistrar {
         return conditionalBlock(run, name, supplier, true);
     }
 
-    public Map<String, DeferredBlock<? extends Block>> getRegisteredBlocks() {
-        return registeredBlocks;
+    public DeferredBlock<? extends Block> getBlock(String name) {
+        return registeredBlocks.get(name);
     }
 }
