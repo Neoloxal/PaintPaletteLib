@@ -21,7 +21,7 @@ public class Palette {
     public static final String MODID = "paint_palette";
     private static final Logger LOGGER = LogUtils.getLogger();
 
-    public static Set<String> modPalette = ConcurrentHashMap.newKeySet();
+    public static Set<String> modPalette = ConcurrentHashMap.newKeySet(); // The registered registered mods.
     public static List<ItemRegistrar> itemRegisters = new ArrayList<>();
     public static List<BlockRegistrar> blockRegistrars = new ArrayList<>();
 
