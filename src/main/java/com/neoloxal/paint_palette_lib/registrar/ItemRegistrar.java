@@ -36,13 +36,18 @@ public abstract class ItemRegistrar {
     protected abstract void registerItems();
 
 
-    protected <I extends Item> DeferredItem<I> basicItem(String name, Supplier<? extends I> supplier) {
-        if (registeredItems.containsKey(name)) {
+    protected <I extends Item> DeferredItem<I> basicItem(String name, Supplier<? extends I> supplier, String savedName) {
+        if (registeredItems.containsKey(savedName)) {
             throw new IllegalStateException("Duplicate item name: " + name);
         }
         DeferredItem<I> item = items.register(name, supplier);
-        registeredItems.put(name, item);
+        registeredItems.put(savedName, item);
         return item;
+    }
+
+
+    protected <I extends Item> DeferredItem<I> basicItem(String name, Supplier<? extends I> supplier) {
+        return basicItem(name, supplier, name);
     }
 
     protected <I extends FunnyStick> DeferredItem<I> funnyStick(String name, Supplier<? extends I> supplier) {
@@ -57,7 +62,7 @@ public abstract class ItemRegistrar {
     }
 
     protected  <I extends Block> void blockItem(String name, DeferredBlock<I> block) {
-        basicItem(name, () -> new BlockItem(block.get(), new Item.Properties()));
+        basicItem(name, () -> new BlockItem(block.get(), new Item.Properties()), name.concat(".block"));
     }
 
     public DeferredItem<? extends Item> getItem(String name) {
