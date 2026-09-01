@@ -25,7 +25,7 @@ public class Palette {
     public static List<ItemRegistrar> itemRegisters = new ArrayList<>();
     public static List<BlockRegistrar> blockRegistrars = new ArrayList<>();
 
-    public static boolean enableDemoItems = true;
+    public static boolean enableDemoContent = true;
     private static final ItemRegistrar LIB_ITEMS = new LibItems();
 
     public Palette(IEventBus modEventBus, ModContainer modContainer) {
