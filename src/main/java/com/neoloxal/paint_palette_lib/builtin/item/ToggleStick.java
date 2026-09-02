@@ -54,7 +54,11 @@ public class ToggleStick extends FunnyStick {
         if (!isSelected && disableOnUnselected) {
             if (entity instanceof Player player) {
                 stack.set(LibDataComponents.TOGGLE.get(), false);
-                toggle(level, player, player.getUsedItemHand(), stack, false);
+                InteractionHand hand = player.getMainHandItem() == stack
+                        ? InteractionHand.MAIN_HAND
+                        : InteractionHand.OFF_HAND;
+                toggle(level, player, hand, stack, false);
+                toggleOff(level, player, hand, stack);
             }
         }
     }
