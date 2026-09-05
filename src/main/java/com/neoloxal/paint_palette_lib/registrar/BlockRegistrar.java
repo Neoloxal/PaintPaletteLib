@@ -48,15 +48,11 @@ public abstract class BlockRegistrar {
         return basicBlock(name, supplier, true);
     }
 
-    protected <B extends Block> Optional<DeferredBlock<B>> conditionalBlock(boolean run, String name, Supplier<? extends  B> supplier, boolean registerItem) {
+    protected <B extends Block> Optional<DeferredBlock<B>> conditionalBlock(boolean run, Supplier<DeferredBlock<B>> supplier) {
         if (run) {
-            return Optional.of(basicBlock(name, supplier, registerItem));
+            return Optional.of(supplier.get());
         }
         return Optional.empty();
-    }
-
-    protected <B extends Block> Optional<DeferredBlock<B>> conditionalBlock(boolean run, String name, Supplier<? extends  B> supplier) {
-        return conditionalBlock(run, name, supplier, true);
     }
 
     public DeferredBlock<? extends Block> getBlock(String name) {

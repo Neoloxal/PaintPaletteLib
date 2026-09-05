@@ -13,7 +13,7 @@ public class LibItems extends ItemRegistrar {
 
     @Override
     protected void registerItems() {
-        conditionalItem(Palette.enableDemoContent, "funny_stick", () -> new FunnyStick(new Item.Properties()));
-        conditionalItem(Palette.enableDemoContent, "toggle_stick", () -> new ToggleStick(new Item.Properties(), false));
+        conditionalItem(Palette.enableDemoContent, () -> funnyStick("funny_stick", () -> new FunnyStick(new Item.Properties())));
+        conditionalItem(Palette.enableDemoContent, () -> funnyStick("toggle_stick", () -> new ToggleStick(new Item.Properties(), false)));
     }
 }

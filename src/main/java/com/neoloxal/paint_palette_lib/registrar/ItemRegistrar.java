@@ -51,12 +51,13 @@ public abstract class ItemRegistrar {
     }
 
     protected <I extends FunnyStick> DeferredItem<I> funnyStick(String name, Supplier<? extends I> supplier) {
-        return basicItem(name, supplier);
+        DeferredItem<I> item = basicItem(name, supplier);
+        return item;
     }
 
-    protected <I extends Item> Optional<DeferredItem<I>> conditionalItem(boolean run, String name, Supplier<? extends I> supplier) {
+    protected <I extends Item> Optional<DeferredItem<I>> conditionalItem(boolean run, Supplier<DeferredItem<I>> supplier) {
         if (run) {
-            return Optional.of(basicItem(name, supplier));
+            return Optional.of(supplier.get());
         }
         return Optional.empty();
     }
