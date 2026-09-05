@@ -1,5 +1,6 @@
 package com.neoloxal.paint_palette_lib.datagen;
 
+import com.mojang.logging.LogUtils;
 import com.neoloxal.paint_palette_lib.Palette;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
@@ -17,6 +18,7 @@ import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import net.neoforged.neoforge.common.data.LanguageProvider;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
 import org.apache.commons.lang3.text.WordUtils;
+import org.slf4j.Logger;
 
 import java.util.Collections;
 import java.util.List;
@@ -24,6 +26,8 @@ import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 
 public class LibDataGenerators {
+    public static final Logger LOGGER = LogUtils.getLogger();
+
     public static void gatherData(GatherDataEvent event) {
         DataGenerator generator = event.getGenerator();
         PackOutput packOutput = generator.getPackOutput();
@@ -34,8 +38,12 @@ public class LibDataGenerators {
         generator.addProvider(event.includeClient(), new LibItemModelProvider(packOutput, modid, existingFileHelper));
         generator.addProvider(event.includeClient(), new LibLangProvider(packOutput, modid));
 
-        generator.addProvider(event.includeServer(), new LootTableProvider(packOutput, Collections.emptySet(),
-                List.of(new LootTableProvider.SubProviderEntry(registries -> new LibBlockLootTableProvider(registries, modid), LootContextParamSets.BLOCK)), lookupProvider));
+        if (Palette.blockRegistrars.containsKey(modid)) {
+            generator.addProvider(event.includeServer(), new LootTableProvider(packOutput, Collections.emptySet(),
+                    List.of(new LootTableProvider.SubProviderEntry(registries -> new LibBlockLootTableProvider(registries, modid), LootContextParamSets.BLOCK)), lookupProvider));
+        } else {
+            LOGGER.info("No block registrar found for mod: {}, skipping.", modid);
+        }
     }
 
     private static class LibItemModelProvider extends ItemModelProvider {
@@ -69,7 +77,7 @@ public class LibDataGenerators {
         @Override
         protected void addTranslations() {
             Palette.Canvas.getGenerateName(modId).forEach(deferredHolder ->
-                add(deferredHolder.getId().toString(), WordUtils.capitalizeFully(deferredHolder.getKey().location().getPath().replace('_', ' ')))
+                add(deferredHolder.getId().toLanguageKey(deferredHolder.getKey().registryKey().location().getPath()), WordUtils.capitalizeFully(deferredHolder.getKey().location().getPath().replace('_', ' ')))
             );
         }
     }
