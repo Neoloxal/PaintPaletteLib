@@ -14,6 +14,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.neoforged.neoforge.client.model.generators.ItemModelProvider;
+import net.neoforged.neoforge.common.data.BlockTagsProvider;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import net.neoforged.neoforge.common.data.LanguageProvider;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
@@ -44,6 +45,23 @@ public class LibDataGenerators {
         } else {
             LOGGER.info("No block registrar found for mod: {}, skipping.", modid);
         }
+
+        Palette.Canvas.getCreateTagsGenerator(modid).forEach(tagGeneratorPair -> {
+            Palette.Canvas.BlockTagsFactory blockTagsFactory = tagGeneratorPair.getA();
+            Palette.Canvas.ItemTagsFactory itemTagsFactory = tagGeneratorPair.getB();
+
+            BlockTagsProvider blockTagsProvider = blockTagsFactory.create(packOutput, lookupProvider, modid, existingFileHelper);
+            generator.addProvider(event.includeServer(), blockTagsProvider);
+            if (itemTagsFactory != null) {
+                generator.addProvider(event.includeServer(), itemTagsFactory.create(packOutput, lookupProvider, blockTagsProvider.contentsGetter(), modid, existingFileHelper));
+            }
+        });
+
+        Palette.Canvas.getCreateRecipeGenerator(modid).forEach(recipeFactory -> generator.addProvider(event.includeServer(), recipeFactory.create(packOutput, lookupProvider)));
+
+        Palette.Canvas.getCreateItemModelGenerator(modid).forEach(itemModelFactory -> generator.addProvider(event.includeClient(), itemModelFactory.create(packOutput, modid, existingFileHelper)));
+
+        Palette.Canvas.getCreateBlockModelGenerator(modid).forEach(blockModelFactory -> generator.addProvider(event.includeClient(), blockModelFactory.create(packOutput, modid, existingFileHelper)));
     }
 
     private static class LibItemModelProvider extends ItemModelProvider {
