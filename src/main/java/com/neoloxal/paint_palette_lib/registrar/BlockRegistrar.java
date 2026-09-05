@@ -4,8 +4,10 @@ import com.neoloxal.paint_palette_lib.Palette;
 import net.minecraft.world.level.block.Block;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredBlock;
+import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -27,7 +29,11 @@ public abstract class BlockRegistrar {
     public void register(IEventBus eventBus) {
         registerBlocks();
         blocks.register(eventBus);
-        Palette.blockRegistrars.add(this);
+        if (!Palette.blockRegistrars.containsKey(modId)) {
+            Palette.blockRegistrars.put(modId, this);
+        } else {
+            throw new IllegalStateException("A block registrar is already assinged to mod: %s!".formatted(modId));
+        }
     }
 
     protected abstract void registerBlocks();
@@ -53,6 +59,10 @@ public abstract class BlockRegistrar {
             return Optional.of(supplier.get());
         }
         return Optional.empty();
+    }
+
+    public Collection<DeferredHolder<Block, ? extends Block>> getEntries() {
+        return blocks.getEntries();
     }
 
     public DeferredBlock<? extends Block> getBlock(String name) {

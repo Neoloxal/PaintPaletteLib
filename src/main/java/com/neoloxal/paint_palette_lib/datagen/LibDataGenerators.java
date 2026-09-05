@@ -1,23 +1,41 @@
 package com.neoloxal.paint_palette_lib.datagen;
 
 import com.neoloxal.paint_palette_lib.Palette;
+import net.minecraft.core.Holder;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.PackOutput;
+import net.minecraft.data.loot.BlockLootSubProvider;
+import net.minecraft.data.loot.LootTableProvider;
+import net.minecraft.world.flag.FeatureFlagSet;
+import net.minecraft.world.flag.FeatureFlags;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.neoforged.neoforge.client.model.generators.ItemModelProvider;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import net.neoforged.neoforge.common.data.LanguageProvider;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
 import org.apache.commons.lang3.text.WordUtils;
 
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
+import java.util.concurrent.CompletableFuture;
+
 public class LibDataGenerators {
     public static void gatherData(GatherDataEvent event) {
         DataGenerator generator = event.getGenerator();
         PackOutput packOutput = generator.getPackOutput();
         ExistingFileHelper existingFileHelper = event.getExistingFileHelper();
+        CompletableFuture<HolderLookup.Provider> lookupProvider = event.getLookupProvider();
         String modid = event.getModContainer().getModId();
 
         generator.addProvider(event.includeClient(), new LibItemModelProvider(packOutput, modid, existingFileHelper));
         generator.addProvider(event.includeClient(), new LibLangProvider(packOutput, modid));
+
+        generator.addProvider(event.includeServer(), new LootTableProvider(packOutput, Collections.emptySet(),
+                List.of(new LootTableProvider.SubProviderEntry(registries -> new LibBlockLootTableProvider(registries, modid), LootContextParamSets.BLOCK)), lookupProvider));
     }
 
     private static class LibItemModelProvider extends ItemModelProvider {
@@ -30,13 +48,13 @@ public class LibDataGenerators {
 
         @Override
         protected void registerModels() {
-            Palette.itemRegisters.forEach(itemRegistrar -> {
-                if (itemRegistrar.getModId().equals(this.modId)) {
-                    itemRegistrar.getFunnySticks().forEach(item ->
-                            withExistingParent(item.getId().toString(), mcLoc("item/stick"))
-                    );
-                }
-            });
+            Palette.Canvas.getGenerateItemModel(modId).forEach(item ->
+                    basicItem(item.get())
+            );
+
+            Palette.Canvas.getGenerateStickModel(modId).forEach(item ->
+                withExistingParent(item.getId().toString(), mcLoc("item/stick"))
+            );
         }
     }
 
@@ -50,13 +68,30 @@ public class LibDataGenerators {
 
         @Override
         protected void addTranslations() {
-            Palette.itemRegisters.forEach(itemRegistrar -> {
-                if (itemRegistrar.getModId().equals(this.modId)) {
-                    itemRegistrar.getFunnySticks().forEach(item ->
-                            add(item.get(), WordUtils.capitalizeFully(item.getKey().location().getPath().replace('_', ' ')))
-                    );
-                }
-            });
+            Palette.Canvas.getGenerateName(modId).forEach(deferredHolder ->
+                add(deferredHolder.getId().toString(), WordUtils.capitalizeFully(deferredHolder.getKey().location().getPath().replace('_', ' ')))
+            );
+        }
+    }
+
+    private static class LibBlockLootTableProvider extends BlockLootSubProvider {
+        private final String modId;
+
+        protected LibBlockLootTableProvider(HolderLookup.Provider registries, String modId) {
+            super(Set.of(), FeatureFlags.REGISTRY.allFlags(), registries);
+            this.modId = modId;
+        }
+
+        @Override
+        protected void generate() {
+            Palette.Canvas.getGenerateBasicBlockDrop(modId).forEach(block ->
+                dropSelf(block.get())
+            );
+        }
+
+        @Override
+        protected Iterable<Block> getKnownBlocks() {
+            return Palette.blockRegistrars.get(modId).getEntries().stream().map(Holder::value)::iterator;
         }
     }
 }

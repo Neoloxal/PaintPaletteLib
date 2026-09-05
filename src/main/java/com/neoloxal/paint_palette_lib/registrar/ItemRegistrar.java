@@ -14,7 +14,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Supplier;
-import java.util.stream.Stream;
 
 public abstract class ItemRegistrar {
     protected final DeferredRegister.Items items;
@@ -30,7 +29,6 @@ public abstract class ItemRegistrar {
     public void register(IEventBus eventBus) {
         registerItems();
         items.register(eventBus);
-        Palette.itemRegisters.add(this);
     }
 
     protected abstract void registerItems();
@@ -52,6 +50,8 @@ public abstract class ItemRegistrar {
 
     protected <I extends FunnyStick> DeferredItem<I> funnyStick(String name, Supplier<? extends I> supplier) {
         DeferredItem<I> item = basicItem(name, supplier);
+        Palette.Canvas.generateName(item);
+        Palette.Canvas.generateStickModel(item);
         return item;
     }
 
@@ -68,14 +68,6 @@ public abstract class ItemRegistrar {
 
     public DeferredItem<? extends Item> getItem(String name) {
         return registeredItems.get(name);
-    }
-
-
-    @SuppressWarnings("unchecked")
-    public Stream<DeferredItem<? extends FunnyStick>> getFunnySticks() {
-        return items.getEntries().stream()
-                .filter(entry -> entry.get() instanceof FunnyStick)
-                .map(entry -> (DeferredItem<? extends FunnyStick>) entry);
     }
 
     public String getModId() {
