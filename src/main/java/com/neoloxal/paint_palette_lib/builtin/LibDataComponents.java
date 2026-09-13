@@ -4,6 +4,7 @@ import com.mojang.serialization.Codec;
 import com.neoloxal.paint_palette_lib.Palette;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.network.codec.ByteBufCodecs;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
@@ -13,7 +14,7 @@ public class LibDataComponents {
 
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<Boolean>> TOGGLE = DATA_COMPONENTS.registerComponentType(
             "toggle",
-            builder -> builder.persistent(Codec.BOOL)
+            builder -> builder.persistent(Codec.BOOL).networkSynchronized(ByteBufCodecs.BOOL)
     );
 
     public static void register(IEventBus eventBus) {
