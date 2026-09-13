@@ -21,10 +21,12 @@ import net.neoforged.neoforge.data.event.GatherDataEvent;
 import org.apache.commons.lang3.text.WordUtils;
 import org.slf4j.Logger;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
+import java.util.function.BiConsumer;
 
 public class LibDataGenerators {
     public static final Logger LOGGER = LogUtils.getLogger();
@@ -84,7 +86,8 @@ public class LibDataGenerators {
         }
     }
 
-    private static class LibLangProvider extends LanguageProvider {
+    public static class LibLangProvider extends LanguageProvider {
+        public static final List<BiConsumer<String, BiConsumer<String, String>>> EXTERNAL_TRANSLATORS = new ArrayList<>();
         private final String modId;
 
         public LibLangProvider(PackOutput output, String modid) {
@@ -97,6 +100,8 @@ public class LibDataGenerators {
             Palette.Canvas.getGenerateName(modId).forEach(deferredHolder ->
                 add(deferredHolder.getId().toLanguageKey(deferredHolder.getKey().registryKey().location().getPath()), WordUtils.capitalizeFully(deferredHolder.getKey().location().getPath().replace('_', ' ')))
             );
+
+            EXTERNAL_TRANSLATORS.forEach(hook -> hook.accept(this.modId, this::add));
         }
     }
 
