@@ -1,6 +1,6 @@
 package com.neoloxal.paint_palette_lib.builtin.item;
 
-import com.neoloxal.paint_palette_lib.builtin.LibDataComponents;
+import com.neoloxal.paint_palette_lib.builtin.PaletteDataComponents;
 import com.neoloxal.paint_palette_lib.utils.DataComponentUtils;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
@@ -13,7 +13,7 @@ public class ToggleStick extends FunnyStick {
     private final boolean disableOnUnselected; // Recommended to set in the class.
 
     public ToggleStick(Properties properties, boolean disableOnUnselected) {
-        super(properties.component(LibDataComponents.TOGGLE.get(), false));
+        super(properties.component(PaletteDataComponents.TOGGLE.get(), false));
         this.disableOnUnselected = disableOnUnselected;
     }
 
@@ -23,7 +23,7 @@ public class ToggleStick extends FunnyStick {
         ItemStack stack = player.getItemInHand(usedHand);
         DataComponentUtils.toggleStack(stack);
 
-        if (Boolean.TRUE.equals(stack.get(LibDataComponents.TOGGLE.get()))) {
+        if (Boolean.TRUE.equals(stack.get(PaletteDataComponents.TOGGLE.get()))) {
             toggle(level, player, usedHand, stack, true);
             toggleOn(level, player, usedHand, stack);
         } else {
@@ -53,7 +53,7 @@ public class ToggleStick extends FunnyStick {
         super.inventoryTick(stack, level, entity, slotId, isSelected);
         if (!isSelected && disableOnUnselected) {
             if (entity instanceof Player player) {
-                stack.set(LibDataComponents.TOGGLE.get(), false);
+                stack.set(PaletteDataComponents.TOGGLE.get(), false);
                 InteractionHand hand = player.getMainHandItem() == stack
                         ? InteractionHand.MAIN_HAND
                         : InteractionHand.OFF_HAND;

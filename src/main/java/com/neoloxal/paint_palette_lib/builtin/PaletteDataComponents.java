@@ -9,7 +9,7 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
-public class LibDataComponents {
+public class PaletteDataComponents {
     private static final DeferredRegister.DataComponents DATA_COMPONENTS = DeferredRegister.createDataComponents(Registries.DATA_COMPONENT_TYPE, Palette.MODID);
 
     public static final DeferredHolder<DataComponentType<?>, DataComponentType<Boolean>> TOGGLE = DATA_COMPONENTS.registerComponentType(

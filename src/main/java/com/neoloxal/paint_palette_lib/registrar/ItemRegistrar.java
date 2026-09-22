@@ -1,6 +1,6 @@
 package com.neoloxal.paint_palette_lib.registrar;
 
-import com.neoloxal.paint_palette_lib.Palette;
+import com.neoloxal.paint_palette_lib.PaletteUtils;
 import com.neoloxal.paint_palette_lib.builtin.item.FunnyStick;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
@@ -50,8 +50,8 @@ public abstract class ItemRegistrar {
 
     protected <I extends FunnyStick> DeferredItem<I> funnyStick(String name, Supplier<? extends I> supplier) {
         DeferredItem<I> item = basicItem(name, supplier);
-        Palette.Canvas.generateName(item);
-        Palette.Canvas.generateStickModel(item);
+        PaletteUtils.Canvas.generateName(item);
+        PaletteUtils.Canvas.generateStickModel(item);
         return item;
     }
 

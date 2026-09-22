@@ -2,15 +2,14 @@ package com.neoloxal.paint_palette_lib.datagen;
 
 import com.mojang.logging.LogUtils;
 import com.neoloxal.paint_palette_lib.Palette;
+import com.neoloxal.paint_palette_lib.PaletteUtils;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.loot.BlockLootSubProvider;
 import net.minecraft.data.loot.LootTableProvider;
-import net.minecraft.world.flag.FeatureFlagSet;
 import net.minecraft.world.flag.FeatureFlags;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.neoforged.neoforge.client.model.generators.ItemModelProvider;
@@ -18,7 +17,6 @@ import net.neoforged.neoforge.common.data.BlockTagsProvider;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import net.neoforged.neoforge.common.data.LanguageProvider;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
-import org.apache.commons.lang3.text.WordUtils;
 import org.slf4j.Logger;
 
 import java.util.ArrayList;
@@ -28,7 +26,7 @@ import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.BiConsumer;
 
-public class LibDataGenerators {
+public class CanvasDatagen {
     public static final Logger LOGGER = LogUtils.getLogger();
 
     public static void gatherData(GatherDataEvent event) {
@@ -39,7 +37,11 @@ public class LibDataGenerators {
         String modid = event.getModContainer().getModId();
 
         generator.addProvider(event.includeClient(), new LibItemModelProvider(packOutput, modid, existingFileHelper));
-        generator.addProvider(event.includeClient(), new LibLangProvider(packOutput, modid));
+        if (PaletteUtils.Canvas.getReplacedLanguageProvider(modid) == null) {
+            generator.addProvider(event.includeClient(), new LibLangProvider(packOutput, modid));
+        } else {
+            generator.addProvider(event.includeClient(), PaletteUtils.Canvas.getReplacedLanguageProvider(modid).create(packOutput, modid));
+        }
 
         if (Palette.blockRegistrars.containsKey(modid)) {
             generator.addProvider(event.includeServer(), new LootTableProvider(packOutput, Collections.emptySet(),
@@ -48,9 +50,9 @@ public class LibDataGenerators {
             LOGGER.info("No block registrar found for mod: {}, skipping.", modid);
         }
 
-        Palette.Canvas.getCreateTagsGenerator(modid).forEach(tagGeneratorPair -> {
-            Palette.Canvas.BlockTagsFactory blockTagsFactory = tagGeneratorPair.getA();
-            Palette.Canvas.ItemTagsFactory itemTagsFactory = tagGeneratorPair.getB();
+        PaletteUtils.Canvas.getCreateTagsGenerator(modid).forEach(tagGeneratorPair -> {
+            PaletteUtils.Canvas.BlockTagsFactory blockTagsFactory = tagGeneratorPair.getA();
+            PaletteUtils.Canvas.ItemTagsFactory itemTagsFactory = tagGeneratorPair.getB();
 
             BlockTagsProvider blockTagsProvider = blockTagsFactory.create(packOutput, lookupProvider, modid, existingFileHelper);
             generator.addProvider(event.includeServer(), blockTagsProvider);
@@ -59,11 +61,11 @@ public class LibDataGenerators {
             }
         });
 
-        Palette.Canvas.getCreateRecipeGenerator(modid).forEach(recipeFactory -> generator.addProvider(event.includeServer(), recipeFactory.create(packOutput, lookupProvider)));
+        PaletteUtils.Canvas.getCreateRecipeGenerator(modid).forEach(recipeFactory -> generator.addProvider(event.includeServer(), recipeFactory.create(packOutput, lookupProvider)));
 
-        Palette.Canvas.getCreateItemModelGenerator(modid).forEach(itemModelFactory -> generator.addProvider(event.includeClient(), itemModelFactory.create(packOutput, modid, existingFileHelper)));
+        PaletteUtils.Canvas.getCreateItemModelGenerator(modid).forEach(itemModelFactory -> generator.addProvider(event.includeClient(), itemModelFactory.create(packOutput, modid, existingFileHelper)));
 
-        Palette.Canvas.getCreateBlockModelGenerator(modid).forEach(blockModelFactory -> generator.addProvider(event.includeClient(), blockModelFactory.create(packOutput, modid, existingFileHelper)));
+        PaletteUtils.Canvas.getCreateBlockModelGenerator(modid).forEach(blockModelFactory -> generator.addProvider(event.includeClient(), blockModelFactory.create(packOutput, modid, existingFileHelper)));
     }
 
     private static class LibItemModelProvider extends ItemModelProvider {
@@ -76,18 +78,17 @@ public class LibDataGenerators {
 
         @Override
         protected void registerModels() {
-            Palette.Canvas.getGenerateItemModel(modId).forEach(item ->
+            PaletteUtils.Canvas.getGenerateItemModel(modId).forEach(item ->
                     basicItem(item.get())
             );
 
-            Palette.Canvas.getGenerateStickModel(modId).forEach(item ->
-                withExistingParent(item.getId().toString(), mcLoc("item/stick"))
+            PaletteUtils.Canvas.getGenerateStickModel(modId).forEach(item ->
+                    withExistingParent(item.getId().toString(), mcLoc("item/stick"))
             );
         }
     }
 
-    public static class LibLangProvider extends LanguageProvider {
-        public static final List<BiConsumer<String, BiConsumer<String, String>>> EXTERNAL_TRANSLATORS = new ArrayList<>();
+    public static class LibLangProvider extends LanguageProvider implements DatagenUtils.CanvasLanguageProvider {
         private final String modId;
 
         public LibLangProvider(PackOutput output, String modid) {
@@ -97,11 +98,9 @@ public class LibDataGenerators {
 
         @Override
         protected void addTranslations() {
-            Palette.Canvas.getGenerateName(modId).forEach(deferredHolder ->
-                add(deferredHolder.getId().toLanguageKey(deferredHolder.getKey().registryKey().location().getPath()), WordUtils.capitalizeFully(deferredHolder.getKey().location().getPath().replace('_', ' ')))
-            );
+            generateLanguage(modId, this::add);
 
-            EXTERNAL_TRANSLATORS.forEach(hook -> hook.accept(this.modId, this::add));
+            PaletteUtils.Canvas.getAddTranslation(modId).forEach((pair -> add(pair.getA(), pair.getB())));
         }
     }
 
@@ -115,8 +114,8 @@ public class LibDataGenerators {
 
         @Override
         protected void generate() {
-            Palette.Canvas.getGenerateBasicBlockDrop(modId).forEach(block ->
-                dropSelf(block.get())
+            PaletteUtils.Canvas.getGenerateBasicBlockDrop(modId).forEach(block ->
+                    dropSelf(block.get())
             );
         }
 
