@@ -1,8 +1,7 @@
 package com.neoloxal.paint_palette_lib;
 
 import com.mojang.logging.LogUtils;
-import com.neoloxal.paint_palette_lib.builtin.item.FunnyStick;
-import com.neoloxal.paint_palette_lib.datagen.DatagenUtils;
+import com.neoloxal.paint_palette_lib.builtin.item.OperatorBrush;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.RecipeProvider;
@@ -26,7 +25,6 @@ import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.function.BiConsumer;
 
 public class PaletteUtils {
     public static class Canvas {
@@ -38,7 +36,7 @@ public class PaletteUtils {
             protected static Map<String, List<Pair<String, String>>> addTranslation = new ConcurrentHashMap<>();
 
             protected static Map<String, List<DeferredItem<? extends Item>>> generateItemModel = new ConcurrentHashMap<>();
-            protected static Map<String, List<DeferredItem<? extends FunnyStick>>> generateStickModel = new ConcurrentHashMap<>();
+            protected static Map<String, List<DeferredItem<? extends OperatorBrush>>> generateOperatorBrushModel = new ConcurrentHashMap<>();
 
             protected static Map<String, List<DeferredBlock<? extends Block>>> generateBasicBlockDrop = new ConcurrentHashMap<>();
 
@@ -77,9 +75,9 @@ public class PaletteUtils {
             );
         }
 
-        public static <T extends DeferredItem<? extends FunnyStick>> void generateStickModel(T deferredItem) {
+        public static <T extends DeferredItem<? extends OperatorBrush>> void generateOperatorBrushModel(T deferredItem) {
             addDeferredTask(
-                    Todo.generateStickModel,
+                    Todo.generateOperatorBrushModel,
                     deferredItem.getId().getNamespace(),
                     deferredItem,
                     "generate stick model for %s."
@@ -184,8 +182,8 @@ public class PaletteUtils {
             return Todo.generateItemModel.get(modid);
         }
 
-        public static List<DeferredItem<? extends FunnyStick>> getGenerateStickModel(String modid) {
-            return Todo.generateStickModel.get(modid);
+        public static List<DeferredItem<? extends OperatorBrush>> getGenerateStickModel(String modid) {
+            return Todo.generateOperatorBrushModel.get(modid);
         }
 
         public static List<DeferredBlock<? extends Block>> getGenerateBasicBlockDrop(String modid) {

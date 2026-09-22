@@ -8,8 +8,8 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
-public class FunnyStick extends Item {
-    public FunnyStick(Properties properties) {
+public class OperatorBrush extends Item {
+    public OperatorBrush(Properties properties) {
         super(properties
                 .stacksTo(1)
                 .component(DataComponents.ENCHANTMENT_GLINT_OVERRIDE, true)

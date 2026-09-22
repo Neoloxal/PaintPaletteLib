@@ -9,10 +9,10 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
-public class ToggleStick extends FunnyStick {
+public class ToggleOperatorBrush extends OperatorBrush {
     private final boolean disableOnUnselected; // Recommended to set in the class.
 
-    public ToggleStick(Properties properties, boolean disableOnUnselected) {
+    public ToggleOperatorBrush(Properties properties, boolean disableOnUnselected) {
         super(properties.component(PaletteDataComponents.TOGGLE.get(), false));
         this.disableOnUnselected = disableOnUnselected;
     }
@@ -25,26 +25,14 @@ public class ToggleStick extends FunnyStick {
 
         if (Boolean.TRUE.equals(stack.get(PaletteDataComponents.TOGGLE.get()))) {
             toggle(level, player, usedHand, stack, true);
-            toggleOn(level, player, usedHand, stack);
         } else {
             toggle(level, player, usedHand, stack, false);
-            toggleOff(level, player, usedHand, stack);
         }
 
         return InteractionResultHolder.success(stack);
     }
 
     public void toggle(Level level, Player player, InteractionHand usedHand, ItemStack stack, boolean newState) {
-
-    }
-
-    @Deprecated(since = "v0.2.2", forRemoval = true)
-    public void toggleOn(Level level, Player player, InteractionHand usedHand, ItemStack stack) {
-
-    }
-
-    @Deprecated(since = "v0.2.2", forRemoval = true)
-    public void toggleOff(Level level, Player player, InteractionHand usedHand, ItemStack stack) {
 
     }
 
@@ -58,7 +46,6 @@ public class ToggleStick extends FunnyStick {
                         ? InteractionHand.MAIN_HAND
                         : InteractionHand.OFF_HAND;
                 toggle(level, player, hand, stack, false);
-                toggleOff(level, player, hand, stack);
             }
         }
     }

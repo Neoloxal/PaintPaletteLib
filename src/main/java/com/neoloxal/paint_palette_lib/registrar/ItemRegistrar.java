@@ -1,7 +1,7 @@
 package com.neoloxal.paint_palette_lib.registrar;
 
 import com.neoloxal.paint_palette_lib.PaletteUtils;
-import com.neoloxal.paint_palette_lib.builtin.item.FunnyStick;
+import com.neoloxal.paint_palette_lib.builtin.item.OperatorBrush;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
@@ -48,10 +48,10 @@ public abstract class ItemRegistrar {
         return basicItem(name, supplier, name);
     }
 
-    protected <I extends FunnyStick> DeferredItem<I> funnyStick(String name, Supplier<? extends I> supplier) {
+    protected <I extends OperatorBrush> DeferredItem<I> operatorBrush(String name, Supplier<? extends I> supplier) {
         DeferredItem<I> item = basicItem(name, supplier);
         PaletteUtils.Canvas.generateName(item);
-        PaletteUtils.Canvas.generateStickModel(item);
+        PaletteUtils.Canvas.generateOperatorBrushModel(item);
         return item;
     }
 

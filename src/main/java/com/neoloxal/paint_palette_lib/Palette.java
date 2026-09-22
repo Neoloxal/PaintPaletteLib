@@ -45,7 +45,7 @@ public class Palette {
         PaletteUtils.Canvas.Todo.generateName.put(modid, new CopyOnWriteArrayList<>());
         PaletteUtils.Canvas.Todo.addTranslation.put(modid, new CopyOnWriteArrayList<>());
         PaletteUtils.Canvas.Todo.generateItemModel.put(modid, new CopyOnWriteArrayList<>());
-        PaletteUtils.Canvas.Todo.generateStickModel.put(modid, new CopyOnWriteArrayList<>());
+        PaletteUtils.Canvas.Todo.generateOperatorBrushModel.put(modid, new CopyOnWriteArrayList<>());
         PaletteUtils.Canvas.Todo.generateBasicBlockDrop.put(modid, new CopyOnWriteArrayList<>());
 
         PaletteUtils.Canvas.Todo.createItemModelGenerator.put(modid, new CopyOnWriteArrayList<>());
