@@ -66,7 +66,11 @@ public abstract class ItemRegistrar {
         basicItem(name, () -> new BlockItem(block.get(), new Item.Properties()), name.concat(".block"));
     }
 
-    public DeferredItem<? extends Item> getItem(String name) {
+    public Item getItem(String name) {
+        return getItemDeferred(name).get();
+    }
+
+    public DeferredItem<? extends Item> getItemDeferred(String name) {
         return registeredItems.get(name);
     }
 

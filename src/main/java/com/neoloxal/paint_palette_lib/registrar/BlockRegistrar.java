@@ -65,7 +65,11 @@ public abstract class BlockRegistrar {
         return blocks.getEntries();
     }
 
-    public DeferredBlock<? extends Block> getBlock(String name) {
+    public Block getBlock(String name) {
+        return getBlockDeferred(name).get();
+    }
+
+    public DeferredBlock<? extends Block> getBlockDeferred(String name) {
         return registeredBlocks.get(name);
     }
 }
