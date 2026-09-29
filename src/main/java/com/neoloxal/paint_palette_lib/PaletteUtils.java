@@ -31,7 +31,7 @@ public class PaletteUtils {
         private static final Logger LOGGER = LogUtils.getLogger();
 
         protected static class Todo {
-            protected static Map<String, LanguageFactory> replaceLanguageProvider = new ConcurrentHashMap<>();
+            protected static Map<String, List<LanguageFactory>> createLanguageProvider = new ConcurrentHashMap<>();
             protected static Map<String, List<DeferredHolder<?, ?>>> generateName = new ConcurrentHashMap<>();
             protected static Map<String, List<Pair<String, String>>> addTranslation = new ConcurrentHashMap<>();
 
@@ -129,12 +129,12 @@ public class PaletteUtils {
             );
         }
 
-        public static void useOtherLanguageProvider(String modid, LanguageFactory languageFactory) {
-            addTaskNoList(
-                    Todo.replaceLanguageProvider,
+        public static void createLanguageProvider(String modid, LanguageFactory languageFactory) {
+            addDataProviderTask(
+                    Todo.createLanguageProvider,
                     modid,
                     languageFactory,
-                    "replace language provider for mod %s".formatted(modid)
+                    "create language provider for mod %s"
             );
         }
 
@@ -206,8 +206,8 @@ public class PaletteUtils {
             return Todo.createRecipeGenerator.get(modid);
         }
 
-        public static LanguageFactory getReplacedLanguageProvider(String modid) {
-            return Todo.replaceLanguageProvider.get(modid);
+        public static List<LanguageFactory> getCreateLanguageProvider(String modid) {
+            return Todo.createLanguageProvider.get(modid);
         }
 
         public interface BlockTagsFactory {

@@ -38,11 +38,10 @@ public class CanvasDatagen {
         String modid = event.getModContainer().getModId();
 
         generator.addProvider(event.includeClient(), new LibItemModelProvider(packOutput, modid, existingFileHelper));
-        if (PaletteUtils.Canvas.getReplacedLanguageProvider(modid) == null) {
-            generator.addProvider(event.includeClient(), new LibLangProvider(packOutput, modid));
-        } else {
-            generator.addProvider(event.includeClient(), PaletteUtils.Canvas.getReplacedLanguageProvider(modid).create(packOutput, modid));
-        }
+        generator.addProvider(event.includeClient(), new LibLangProvider(packOutput, modid));
+        PaletteUtils.Canvas.getCreateLanguageProvider(modid).forEach(languageFactory ->
+                generator.addProvider(event.includeClient(), languageFactory.create(packOutput, modid))
+        );
 
         if (Palette.blockRegistrars.containsKey(modid)) {
             generator.addProvider(event.includeServer(), new LootTableProvider(packOutput, Collections.emptySet(),
@@ -87,6 +86,11 @@ public class CanvasDatagen {
                     withExistingParent(item.getId().toString(), ResourceLocation.fromNamespaceAndPath(Palette.MODID, "item/paint_brush"))
             );
         }
+
+        @Override
+        public String getName() {
+            return "Canvas Item Models for %s".formatted(modId);
+        }
     }
 
     public static class LibLangProvider extends LanguageProvider implements DatagenUtils.CanvasLanguageProvider {
@@ -102,6 +106,11 @@ public class CanvasDatagen {
             generateLanguage(modId, this::add);
 
             PaletteUtils.Canvas.getAddTranslation(modId).forEach((pair -> add(pair.getA(), pair.getB())));
+        }
+
+        @Override
+        public String getName() {
+            return "Canvas language for %s".formatted(modId);
         }
     }
 
