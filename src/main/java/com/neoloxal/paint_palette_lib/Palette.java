@@ -28,13 +28,14 @@ public class Palette {
     private static final ItemRegistrar LIB_ITEMS = new LibItems();
 
     public Palette(IEventBus modEventBus, ModContainer modContainer) {
-        registerMod(MODID, modEventBus);
+        registerMod(new PaletteMod(modContainer));
 
         PaletteDataComponents.register(modEventBus);
         LIB_ITEMS.register(modEventBus);
     }
 
-    public static void registerMod(String modid, IEventBus modEventBus) {
+    public static void registerMod(PaletteMod mod) {
+        String modid = mod.modid;
         if (!modPalette.add(modid)) {
             LOGGER.warn("Mod {} already exists in mod palette!", modid);
             return;
@@ -47,12 +48,13 @@ public class Palette {
         PaletteUtils.Canvas.Todo.generateItemModel.put(modid, new CopyOnWriteArrayList<>());
         PaletteUtils.Canvas.Todo.generateOperatorBrushModel.put(modid, new CopyOnWriteArrayList<>());
         PaletteUtils.Canvas.Todo.generateBasicBlockDrop.put(modid, new CopyOnWriteArrayList<>());
+        PaletteUtils.Canvas.Todo.enableCanvasLanguageProvider.put(modid, mod.enable_canvas_language_provider);
 
         PaletteUtils.Canvas.Todo.createItemModelGenerator.put(modid, new CopyOnWriteArrayList<>());
         PaletteUtils.Canvas.Todo.createBlockModelGenerator.put(modid, new CopyOnWriteArrayList<>());
         PaletteUtils.Canvas.Todo.createRecipeGenerator.put(modid, new CopyOnWriteArrayList<>());
         PaletteUtils.Canvas.Todo.createTagsGenerator.put(modid, new CopyOnWriteArrayList<>());
 
-        modEventBus.addListener(CanvasDatagen::gatherData);
+        mod.mod_event_bus.addListener(CanvasDatagen::gatherData);
     }
 }

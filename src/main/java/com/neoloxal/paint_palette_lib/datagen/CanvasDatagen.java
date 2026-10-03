@@ -38,7 +38,9 @@ public class CanvasDatagen {
         String modid = event.getModContainer().getModId();
 
         generator.addProvider(event.includeClient(), new LibItemModelProvider(packOutput, modid, existingFileHelper));
-        generator.addProvider(event.includeClient(), new LibLangProvider(packOutput, modid));
+        if (PaletteUtils.Canvas.getEnableCanvasLanguageProvider(modid)) {
+            generator.addProvider(event.includeClient(), new LibLangProvider(packOutput, modid));
+        }
         PaletteUtils.Canvas.getCreateLanguageProvider(modid).forEach(languageFactory ->
                 generator.addProvider(event.includeClient(), languageFactory.create(packOutput, modid))
         );
