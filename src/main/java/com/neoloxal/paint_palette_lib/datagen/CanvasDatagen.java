@@ -14,6 +14,7 @@ import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.neoforged.neoforge.client.model.generators.ItemModelProvider;
+import net.neoforged.neoforge.client.model.generators.ModelFile;
 import net.neoforged.neoforge.common.data.BlockTagsProvider;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import net.neoforged.neoforge.common.data.LanguageProvider;
@@ -85,7 +86,7 @@ public class CanvasDatagen {
             );
 
             PaletteUtils.Canvas.getGenerateStickModel(modId).forEach(item ->
-                    withExistingParent(item.getId().toString(), ResourceLocation.fromNamespaceAndPath(Palette.MODID, "item/paint_brush"))
+                    getBuilder(item.getId().toString()).parent(new ModelFile.UncheckedModelFile(ResourceLocation.fromNamespaceAndPath(Palette.MODID, "item/paint_brush")))
             );
         }
 
