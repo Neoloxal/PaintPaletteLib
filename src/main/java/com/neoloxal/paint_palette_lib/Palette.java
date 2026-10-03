@@ -48,7 +48,7 @@ public class Palette {
         PaletteUtils.Canvas.Todo.generateItemModel.put(modid, new CopyOnWriteArrayList<>());
         PaletteUtils.Canvas.Todo.generateOperatorBrushModel.put(modid, new CopyOnWriteArrayList<>());
         PaletteUtils.Canvas.Todo.generateBasicBlockDrop.put(modid, new CopyOnWriteArrayList<>());
-        PaletteUtils.Canvas.Todo.enableCanvasLanguageProvider.put(modid, mod.enable_canvas_language_provider);
+        PaletteUtils.Canvas.Todo.enableCanvasLanguageDatagen.put(modid, mod.enable_canvas_language_datagen);
 
         PaletteUtils.Canvas.Todo.createItemModelGenerator.put(modid, new CopyOnWriteArrayList<>());
         PaletteUtils.Canvas.Todo.createBlockModelGenerator.put(modid, new CopyOnWriteArrayList<>());

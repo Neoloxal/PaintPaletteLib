@@ -38,12 +38,12 @@ public class CanvasDatagen {
         String modid = event.getModContainer().getModId();
 
         generator.addProvider(event.includeClient(), new LibItemModelProvider(packOutput, modid, existingFileHelper));
-        if (PaletteUtils.Canvas.getEnableCanvasLanguageProvider(modid)) {
+        if (PaletteUtils.Canvas.getEnableCanvasLanguageDatagen(modid)) {
             generator.addProvider(event.includeClient(), new LibLangProvider(packOutput, modid));
+            PaletteUtils.Canvas.getCreateLanguageProvider(modid).forEach(languageFactory ->
+                    generator.addProvider(event.includeClient(), languageFactory.create(packOutput, modid))
+            );
         }
-        PaletteUtils.Canvas.getCreateLanguageProvider(modid).forEach(languageFactory ->
-                generator.addProvider(event.includeClient(), languageFactory.create(packOutput, modid))
-        );
 
         if (Palette.blockRegistrars.containsKey(modid)) {
             generator.addProvider(event.includeServer(), new LootTableProvider(packOutput, Collections.emptySet(),

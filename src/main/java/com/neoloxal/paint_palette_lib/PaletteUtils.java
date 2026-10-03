@@ -34,7 +34,7 @@ public class PaletteUtils {
             protected static Map<String, List<LanguageFactory>> createLanguageProvider = new ConcurrentHashMap<>();
             protected static Map<String, List<DeferredHolder<?, ?>>> generateName = new ConcurrentHashMap<>();
             protected static Map<String, List<Pair<String, String>>> addTranslation = new ConcurrentHashMap<>();
-            protected static Map<String, Boolean> enableCanvasLanguageProvider = new ConcurrentHashMap<>();
+            protected static Map<String, Boolean> enableCanvasLanguageDatagen = new ConcurrentHashMap<>();
 
             protected static Map<String, List<DeferredItem<? extends Item>>> generateItemModel = new ConcurrentHashMap<>();
             protected static Map<String, List<DeferredItem<? extends OperatorBrush>>> generateOperatorBrushModel = new ConcurrentHashMap<>();
@@ -211,8 +211,8 @@ public class PaletteUtils {
             return Todo.createLanguageProvider.get(modid);
         }
 
-        public static boolean getEnableCanvasLanguageProvider(String modid) {
-            return Todo.enableCanvasLanguageProvider.get(modid);
+        public static boolean getEnableCanvasLanguageDatagen(String modid) {
+            return Todo.enableCanvasLanguageDatagen.get(modid);
         }
 
         public interface BlockTagsFactory {

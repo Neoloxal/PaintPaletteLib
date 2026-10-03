@@ -6,20 +6,20 @@ import net.neoforged.fml.ModContainer;
 public class PaletteMod {
     public final String modid;
     public final IEventBus mod_event_bus;
-    public final boolean enable_canvas_language_provider;
+    public final boolean enable_canvas_language_datagen;
 
-    public PaletteMod(String modid, IEventBus modEventBus, boolean enableCanvasLanguageProvider) {
+    public PaletteMod(String modid, IEventBus modEventBus, boolean enableCanvasLanguageDatagen) {
         this.modid = modid;
         this.mod_event_bus = modEventBus;
-        this.enable_canvas_language_provider = enableCanvasLanguageProvider;
+        this.enable_canvas_language_datagen = enableCanvasLanguageDatagen;
     }
 
     public PaletteMod(String modid, IEventBus modEventBus) {
         this(modid, modEventBus, true);
     }
 
-    public PaletteMod(ModContainer modContainer, boolean enableCanvasLanguageProvider) {
-        this(modContainer.getModId(), modContainer.getEventBus(), enableCanvasLanguageProvider);
+    public PaletteMod(ModContainer modContainer, boolean enableCanvasLanguageDatagen) {
+        this(modContainer.getModId(), modContainer.getEventBus(), enableCanvasLanguageDatagen);
     }
 
     public PaletteMod(ModContainer modContainer) {
