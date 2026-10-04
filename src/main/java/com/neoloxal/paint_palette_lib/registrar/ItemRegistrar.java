@@ -74,6 +74,14 @@ public abstract class ItemRegistrar {
         return registeredItems.get(name);
     }
 
+    public Item getBlockItem(String name) {
+        return getBlockItemDeferred(name).get();
+    }
+
+    public DeferredItem<? extends Item> getBlockItemDeferred(String name) {
+        return getItemDeferred(name.concat(".block"));
+    }
+
     public String getModId() {
         return modId;
     }
