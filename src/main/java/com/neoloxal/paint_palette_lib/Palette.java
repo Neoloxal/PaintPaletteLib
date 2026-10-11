@@ -24,7 +24,7 @@ public class Palette {
     public static Set<String> modPalette = ConcurrentHashMap.newKeySet(); // The registered registered mods.
     public static Map<String, BlockRegistrar> blockRegistrars = new ConcurrentHashMap<>();
 
-    public static boolean enableDemoContent = true;
+    public static boolean enableDemoContent = false;
     private static final ItemRegistrar LIB_ITEMS = new LibItems();
 
     public Palette(IEventBus modEventBus, ModContainer modContainer) {
